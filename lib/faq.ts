@@ -117,7 +117,7 @@ export const FAQ: FaqItem[] = [
     id: "test-day",
     question: "When do I increase the weight?",
     answer:
-      "Only after week 5 heavy. Both work sets must be 12 reps. Miss even one rep and that lift repeats the same weight for the next five weeks. Increases are 10% of the full load, including the bar, then rounded to 5 lb.",
+      "Only after week 5 heavy. Both work sets must be 12 reps. Miss even one rep and that lift repeats the same weight for the next five weeks. Add 10% of the full load, including the bar. Example from All-Pro: 45 lb bar + 55 lb plates = 100, next cycle is 110.",
   },
   {
     id: "ohp-miss",

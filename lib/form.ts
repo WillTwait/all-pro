@@ -7,12 +7,14 @@ export type FormGuide = {
   cues: string[];
   equipment: string;
   avoid: string[];
+  video: string;
 };
 
 export const FORM_GUIDES: FormGuide[] = [
   {
     id: "squat",
     title: "Squat",
+    video: "https://www.youtube.com/watch?v=huVujjfzphI",
     equipment: "Barbell back squat. Goblet squat or leg press if you need a stand-in.",
     setup: "Bar on the upper back, not the neck. Feet about shoulder-width, toes slightly out. Brace before you unrack.",
     cues: [
@@ -26,6 +28,7 @@ export const FORM_GUIDES: FormGuide[] = [
   {
     id: "bench",
     title: "Bench Press",
+    video: "https://www.youtube.com/watch?v=whitHNSryjs",
     equipment: "Barbell bench. Dumbbells or a chest-press machine are fine substitutes.",
     setup: "Eyes under the bar. Shoulder blades pulled down and together. Light arch, feet planted.",
     cues: [
@@ -39,6 +42,7 @@ export const FORM_GUIDES: FormGuide[] = [
   {
     id: "row",
     title: "Bent Row",
+    video: "https://www.youtube.com/watch?v=uaw-Up9Fkcg",
     equipment: "Barbell bent-over row. Chest-supported or machine row if the low back is fried.",
     setup: "Hinge until the torso is near 45° or a bit flatter. Soft knees, neutral spine, bar hanging at mid-shin to knee.",
     cues: [
@@ -52,6 +56,7 @@ export const FORM_GUIDES: FormGuide[] = [
   {
     id: "ohp",
     title: "Overhead Press",
+    video: "https://www.youtube.com/watch?v=8d7VpEpm0-4",
     equipment: "Standing barbell press. Seated dumbbell press if the bar feels sketchy.",
     setup: "Bar on the front delts, hands just outside shoulders, elbows slightly in front of the bar. Ribs down, glutes tight.",
     cues: [
@@ -65,6 +70,7 @@ export const FORM_GUIDES: FormGuide[] = [
   {
     id: "sldl",
     title: "Stiff-Legged Deadlift",
+    video: "https://www.youtube.com/watch?v=4UfYR06-A0k",
     equipment: "Barbell SLDL / RDL. Dumbbell RDL is a fine substitute.",
     setup: "Soft knees that stay that way. Bar against the thighs, shoulder blades set, spine long.",
     cues: [
@@ -78,6 +84,7 @@ export const FORM_GUIDES: FormGuide[] = [
   {
     id: "accessory",
     title: "Curl or Upright Row",
+    video: "https://www.youtube.com/watch?v=QwJg6nOJ6fM",
     equipment: "Barbell or dumbbell curl, or barbell upright row. Cables are fine.",
     setup: "Pick one accessory and keep it for the whole cycle. Curls were in the original list; your old sheet used upright rows after week 1.",
     cues: [
@@ -91,6 +98,7 @@ export const FORM_GUIDES: FormGuide[] = [
   {
     id: "calf",
     title: "Calf Raises",
+    video: "https://www.youtube.com/watch?v=ic3hLlPxtFA",
     equipment: "Standing calf raise machine, smith, or barbell. Bodyweight plus a dumbbell works.",
     setup: "Balls of the feet on a step if you have one. Knees soft but not bent like a squat.",
     cues: [

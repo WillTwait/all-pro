@@ -1,4 +1,4 @@
-const CACHE = "all-pro-v1";
+const CACHE = "all-pro-v2";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());

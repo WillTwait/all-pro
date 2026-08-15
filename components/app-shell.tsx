@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useWorkoutStore } from "@/lib/store";
+import { AuthForm } from "./auth-form";
 import { SetupForm } from "./setup-form";
 
 const NAV = [
@@ -14,12 +15,20 @@ const NAV = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { store, ready } = useWorkoutStore();
+  const { store, ready, user, offlineOnly } = useWorkoutStore();
 
   if (!ready) {
     return (
       <div className="mx-auto flex min-h-dvh max-w-md items-center justify-center px-4">
         <p>Loading…</p>
+      </div>
+    );
+  }
+
+  if (!user && !offlineOnly && !store.setupComplete) {
+    return (
+      <div className="mx-auto min-h-dvh w-full max-w-md px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
+        <AuthForm />
       </div>
     );
   }

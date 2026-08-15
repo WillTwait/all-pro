@@ -43,6 +43,11 @@ export function GuideView() {
             <h3 className="font-semibold">{guide.title}</h3>
             <p className="mt-1">{guide.setup}</p>
             <p className="mt-1 text-sm text-neutral-700">{guide.equipment}</p>
+            <p className="mt-1 text-sm">
+              <a className="underline" href={guide.video} target="_blank" rel="noreferrer">
+                Form video
+              </a>
+            </p>
             <ul className="mt-2 list-disc pl-5">
               {guide.cues.map((cue) => (
                 <li key={cue}>{cue}</li>
@@ -71,9 +76,46 @@ export function GuideView() {
       <section className="pb-4 text-sm text-neutral-700">
         <h2 className="text-lg font-semibold text-black">On your phone</h2>
         <p className="mt-2">
-          In Safari, tap Share → Add to Home Screen. It opens full-screen and keeps working
-          offline after the first load. Logs never leave the device unless you export them.
+          In Safari, tap Share → Add to Home Screen. It opens full-screen and keeps a local
+          copy after the first load, then syncs when you are back online. Sign in so a new
+          phone can pick up the same log.
         </p>
+      </section>
+
+      <section className="pb-8 text-sm text-neutral-700">
+        <h2 className="text-lg font-semibold text-black">Sources</h2>
+        <ul className="mt-2 list-disc pl-5">
+          <li>
+            <a
+              className="underline"
+              href="https://forum.bodybuilding.com/showthread.php?t=160947761"
+              target="_blank"
+              rel="noreferrer"
+            >
+              All-Pro Simple Beginner, Bodybuilding.com part V
+            </a>
+          </li>
+          <li>
+            <a
+              className="underline"
+              href="https://www.youtube.com/playlist?list=PL8FAF74A332E11464"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Official form playlist
+            </a>
+          </li>
+          <li>
+            <a
+              className="underline"
+              href="https://liftvault.com/programs/bodybuilding/all-pro-simple-beginner-routine-program-spreadsheet/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Lift Vault FAQ / spreadsheet notes
+            </a>
+          </li>
+        </ul>
       </section>
     </div>
   );

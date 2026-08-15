@@ -7,7 +7,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "All-Pro",
-  description: "Local tracker for All Pro's Simple Beginner routine.",
+  description: "Tracker for All Pro's Simple Beginner routine.",
   applicationName: "All-Pro",
   appleWebApp: {
     capable: true,

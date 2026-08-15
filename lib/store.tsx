@@ -1,11 +1,13 @@
 "use client";
 
+import type { User } from "@supabase/supabase-js";
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -23,11 +25,22 @@ import {
   setCycleBaselines,
   upsertSession,
 } from "./storage";
+import { createClient } from "./supabase/client";
+import { pullCloudStore, pushCloudStore, stampStore } from "./sync";
 import type { Accessory, Baselines, Pointer, Session, Store } from "./types";
+
+export const OFFLINE_ONLY_KEY = "all-pro-offline-only";
+
+type SyncStatus = "local" | "cloud" | "saving" | "offline" | "error";
 
 type StoreApi = {
   store: Store;
   ready: boolean;
+  user: User | null;
+  authReady: boolean;
+  offlineOnly: boolean;
+  syncStatus: SyncStatus;
+  syncError: string | null;
   save: (next: Store) => void;
   setup: (input: { accessory: Accessory; baselines: Baselines }) => void;
   setPointer: (pointer: Pointer) => void;
@@ -38,6 +51,8 @@ type StoreApi = {
   exportJson: () => string;
   importJson: (raw: string) => void;
   resetAll: () => void;
+  useThisPhoneOnly: () => void;
+  signOut: () => Promise<void>;
 };
 
 const StoreContext = createContext<StoreApi | null>(null);
@@ -45,24 +60,113 @@ const StoreContext = createContext<StoreApi | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [store, setStore] = useState<Store>(() => createStore());
   const [ready, setReady] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+  const [offlineOnly, setOfflineOnly] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>("local");
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const userRef = useRef<User | null>(null);
+  const pushTimer = useRef<number | null>(null);
 
   useEffect(() => {
     // Load localStorage after mount so SSR and the first client render match.
     /* eslint-disable react-hooks/set-state-in-effect -- client-only hydration */
     setStore(loadStore());
-    setReady(true);
+    setOfflineOnly(window.localStorage.getItem(OFFLINE_ONLY_KEY) === "1");
     /* eslint-enable react-hooks/set-state-in-effect */
+
+    const supabase = createClient();
+    const failsafe = window.setTimeout(() => {
+      setAuthReady(true);
+      setReady(true);
+    }, 5000);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      const nextUser = session?.user ?? null;
+      userRef.current = nextUser;
+      setUser(nextUser);
+      if (event === "INITIAL_SESSION" || event === "SIGNED_IN") {
+        if (event === "SIGNED_IN") setReady(false);
+        void (async () => {
+          if (nextUser) {
+            window.localStorage.removeItem(OFFLINE_ONLY_KEY);
+            setOfflineOnly(false);
+            try {
+              const cloud = await Promise.race([
+                pullCloudStore(nextUser.id, loadStore()),
+                new Promise<null>((resolve) => {
+                  window.setTimeout(() => resolve(null), 4000);
+                }),
+              ]);
+              if (cloud) {
+                setStore(cloud);
+                saveStore(cloud);
+                setSyncStatus("cloud");
+                setSyncError(null);
+              } else {
+                setSyncStatus("offline");
+              }
+            } catch (error) {
+              setSyncStatus("error");
+              setSyncError(error instanceof Error ? error.message : "Could not sync.");
+            }
+          } else {
+            setSyncStatus("local");
+          }
+          setAuthReady(true);
+          setReady(true);
+          window.clearTimeout(failsafe);
+        })();
+        return;
+      }
+      if (event === "SIGNED_OUT") {
+        setSyncStatus("local");
+        setAuthReady(true);
+        setReady(true);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      window.clearTimeout(failsafe);
+      if (pushTimer.current) window.clearTimeout(pushTimer.current);
+    };
   }, []);
 
   const save = useCallback((next: Store) => {
-    setStore(next);
-    saveStore(next);
+    const stamped = stampStore(next);
+    setStore(stamped);
+    saveStore(stamped);
+    const currentUser = userRef.current;
+    if (!currentUser) {
+      setSyncStatus("local");
+      return;
+    }
+    setSyncStatus("saving");
+    if (pushTimer.current) window.clearTimeout(pushTimer.current);
+    pushTimer.current = window.setTimeout(() => {
+      void pushCloudStore(currentUser.id, stamped)
+        .then(() => {
+          setSyncStatus("cloud");
+          setSyncError(null);
+        })
+        .catch((error: unknown) => {
+          setSyncStatus("error");
+          setSyncError(error instanceof Error ? error.message : "Could not sync.");
+        });
+    }, 500);
   }, []);
 
   const api = useMemo<StoreApi>(
     () => ({
       store,
       ready,
+      user,
+      authReady,
+      offlineOnly,
+      syncStatus,
+      syncError,
       save,
       setup(input) {
         save(completeSetup(store, input));
@@ -157,8 +261,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         };
         save(blank);
       },
+      useThisPhoneOnly() {
+        window.localStorage.setItem(OFFLINE_ONLY_KEY, "1");
+        setOfflineOnly(true);
+      },
+      async signOut() {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        userRef.current = null;
+        setUser(null);
+        setSyncStatus("local");
+      },
     }),
-    [ready, save, store],
+    [authReady, offlineOnly, ready, save, store, syncError, syncStatus, user],
   );
 
   return <StoreContext.Provider value={api}>{children}</StoreContext.Provider>;

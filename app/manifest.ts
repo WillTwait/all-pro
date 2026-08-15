@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "All-Pro Workout",
     short_name: "All-Pro",
-    description: "Local tracker for All Pro's Simple Beginner routine.",
+    description: "Tracker for All Pro's Simple Beginner routine.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

@@ -35,7 +35,7 @@ export function loadStore(): Store {
   }
 }
 
-function migrateStore(store: Store): Store {
+export function migrateStore(store: Store): Store {
   const cycles = store.cycles ?? { "1": defaultBaselines("medium") };
   if (!cycles["1"]) cycles["1"] = defaultBaselines("medium");
   return {
@@ -45,6 +45,7 @@ function migrateStore(store: Store): Store {
     pointer: store.pointer ?? { cycle: 1, week: 1, intensity: "heavy" },
     cycles,
     sessions: Array.isArray(store.sessions) ? store.sessions : [],
+    updatedAt: typeof store.updatedAt === "string" ? store.updatedAt : undefined,
   };
 }
 

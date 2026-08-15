@@ -68,4 +68,5 @@ export type Store = {
   pointer: Pointer;
   cycles: Record<string, Baselines>;
   sessions: Session[];
+  updatedAt?: string;
 };

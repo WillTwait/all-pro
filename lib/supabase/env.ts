@@ -1,0 +1,6 @@
+export const SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://looiccguxxyujhhvlltk.supabase.co";
+
+export const SUPABASE_PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+  "sb_publishable_3jU6N85VRpaUsg6-Vs-YZg_hE66nfYe";
