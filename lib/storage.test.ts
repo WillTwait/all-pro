@@ -11,7 +11,7 @@ describe("buildSession", () => {
     assert.equal(squat.exerciseId, "squat");
     assert.deepEqual(
       squat.sets.map((set) => set.weight),
-      [25, 50, 95, 95],
+      [20, 45, 95, 95],
     );
   });
 });

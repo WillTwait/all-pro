@@ -4,10 +4,16 @@ import Link from "next/link";
 import {
   EXERCISE_IDS,
   INTENSITY_LABEL,
+  INTENSITY_PERCENT,
+  REPS_TO_1RM_PERCENT,
   WEEK_REPS,
+  estimated1rm,
   exerciseName,
+  formatPercent,
+  percentOf1rm,
   plannedSets,
 } from "@/lib/program";
+import { FormulaTables } from "./formula-tables";
 import { workoutHref } from "@/lib/format";
 import { baselinesFor } from "@/lib/storage";
 import { useWorkoutStore } from "@/lib/store";
@@ -28,9 +34,15 @@ export function CycleView() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header>
+      <header className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold">Cycle</h1>
-        <p>Jump to any week or day. Weights below are what that session will load.</p>
+        <p>
+          Heavy working weight is this cycle&apos;s 10RM (
+          {formatPercent(0.75)} of 1RM). This day is{" "}
+          {Math.round(INTENSITY_PERCENT[pointer.intensity] * 100)}% of that (
+          {formatPercent(percentOf1rm(pointer.intensity))} of 1RM). Warm-ups are 25% and 50% of
+          today&apos;s work, floored to 5 lb.
+        </p>
       </header>
 
       <label className="flex flex-col gap-1">
@@ -113,6 +125,11 @@ export function CycleView() {
 
       <section>
         <h2 className="mb-2 font-medium">Planned sets</h2>
+        <p className="mb-2 text-sm text-neutral-700">
+          {WEEK_REPS[pointer.week]} reps · estimated 1RM = ROUNDDOWN(work ÷{" "}
+          {REPS_TO_1RM_PERCENT[WEEK_REPS[pointer.week]]}) · squat ~
+          {estimated1rm(baselines.squat, WEEK_REPS[pointer.week])} lb
+        </p>
         <ul className="flex flex-col gap-2 text-sm">
           {EXERCISE_IDS.map((id) => {
             const sets = plannedSets(baselines[id], pointer.intensity, pointer.week);
@@ -140,6 +157,8 @@ export function CycleView() {
           ? " — test day. Hit 12 on both work sets to add 10% next cycle."
           : "."}
       </p>
+
+      <FormulaTables />
     </div>
   );
 }

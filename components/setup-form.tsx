@@ -9,6 +9,7 @@ import {
   PRESETS,
 } from "@/lib/program";
 import { CYCLE_EXPLAINER } from "@/lib/faq";
+import { FormulaTables } from "./formula-tables";
 import { useWorkoutStore } from "@/lib/store";
 import { EXERCISE_IDS, type Accessory, type Baselines, type ExerciseId, type WeightPreset } from "@/lib/types";
 import { NumberStepper } from "./number-stepper";
@@ -53,6 +54,8 @@ export function SetupForm() {
           starting a new 5-week Cycle 1. Pick how heavy that block should be.
         </p>
       </header>
+
+      <FormulaTables />
 
       <section className="flex flex-col gap-2">
         <h2 className="font-medium">{CYCLE_EXPLAINER.title}</h2>

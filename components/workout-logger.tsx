@@ -10,6 +10,7 @@ import {
   exerciseName,
   isIntensity,
   isWeek,
+  setScaleLabel,
 } from "@/lib/program";
 import { findSession } from "@/lib/storage";
 import { useWorkoutStore } from "@/lib/store";
@@ -104,7 +105,12 @@ export function WorkoutLogger() {
               {exercise.sets.map((set, setIndex) => (
                 <li key={`${set.kind}-${set.index}`} className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium">{setLabel(set)}</span>
+                    <span>
+                      <span className="block font-medium">{setLabel(set)}</span>
+                      <span className="block text-sm text-neutral-600">
+                        {setScaleLabel(set.kind, set.index, session.intensity)}
+                      </span>
+                    </span>
                     <label className="flex h-10 items-center gap-2">
                       <input
                         type="checkbox"

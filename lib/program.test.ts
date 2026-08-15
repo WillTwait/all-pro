@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
-  brzycki1rm,
+  estimated1rm,
+  floorToIncrement,
   nextCycleBaselines,
   nextPointer,
   plannedSets,
@@ -35,14 +36,14 @@ describe("workWeight", () => {
 });
 
 describe("plannedSets", () => {
-  it("builds two warm-ups and two work sets", () => {
+  it("builds two warm-ups and two work sets using the sheet formulas", () => {
     const sets = plannedSets(95, "heavy", 1);
     assert.equal(sets.length, 4);
     assert.deepEqual(
       sets.map((set) => [set.kind, set.weight, set.reps]),
       [
-        ["warmup", 25, 8],
-        ["warmup", 50, 8],
+        ["warmup", 20, 8],
+        ["warmup", 45, 8],
         ["work", 95, 8],
         ["work", 95, 8],
       ],
@@ -80,8 +81,8 @@ function sessionWithReps(reps: number, done = true): Session {
         exerciseId: "squat",
         name: "Squat",
         sets: [
-          { kind: "warmup", index: 1, weight: 25, reps: 12, actualWeight: 25, actualReps: 12, done },
-          { kind: "warmup", index: 2, weight: 50, reps: 12, actualWeight: 50, actualReps: 12, done },
+          { kind: "warmup", index: 1, weight: 20, reps: 12, actualWeight: 20, actualReps: 12, done },
+          { kind: "warmup", index: 2, weight: 45, reps: 12, actualWeight: 45, actualReps: 12, done },
           { kind: "work", index: 1, weight: 95, reps: 12, actualWeight: 95, actualReps: reps, done },
           { kind: "work", index: 2, weight: 95, reps: 12, actualWeight: 95, actualReps: reps, done },
         ],
@@ -114,8 +115,18 @@ describe("week 5 test day", () => {
   });
 });
 
-describe("brzycki1rm", () => {
-  it("uses Brzycki (weight * 36 / (37 - reps))", () => {
-    assert.equal(brzycki1rm(95, 8), 118);
+describe("sheet 1RM", () => {
+  it("matches Progress tab ROUNDDOWN(weight / 0.78) for week 1", () => {
+    assert.equal(estimated1rm(95, 8), 121);
+    assert.equal(estimated1rm(105, 8), 134);
+  });
+});
+
+describe("warmup floor", () => {
+  it("uses FLOOR to 5 lb like the spreadsheet", () => {
+    assert.equal(floorToIncrement(23.75), 20);
+    assert.equal(floorToIncrement(47.5), 45);
+    assert.equal(floorToIncrement(26.25), 25);
+    assert.equal(floorToIncrement(52.5), 50);
   });
 });

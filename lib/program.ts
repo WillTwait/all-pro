@@ -120,12 +120,18 @@ export function roundToIncrement(value: number, increment = 5): number {
   return Math.max(0, Math.round(value / increment) * increment);
 }
 
+/** Excel FLOOR(value, 5) — the sheet uses this for warm-ups. */
+export function floorToIncrement(value: number, increment = 5): number {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.floor(value / increment) * increment);
+}
+
 export function workWeight(baseline: number, intensity: Intensity): number {
   return roundToIncrement(baseline * INTENSITY_PERCENT[intensity]);
 }
 
 export function warmupWeights(work: number): [number, number] {
-  return [roundToIncrement(work * 0.25), roundToIncrement(work * 0.5)];
+  return [floorToIncrement(work * 0.25), floorToIncrement(work * 0.5)];
 }
 
 export function plannedSets(
@@ -196,9 +202,47 @@ export function nextCycleBaselines(
   return { next, passed };
 }
 
-export function brzycki1rm(weight: number, reps: number): number | null {
-  if (weight <= 0 || reps <= 0 || reps >= 37) return null;
-  return Math.round((weight * 36) / (37 - reps));
+/**
+ * Sheet Progress tab: estimated 1RM = ROUNDDOWN(work / %1RM, 0).
+ * Those %1RM values are the standard NSCA chart (8=78%, 10=75%, 12=70%).
+ * Heavy working weight is a 10RM, so it sits at ~75% of 1RM.
+ */
+export const REPS_TO_1RM_PERCENT: Record<number, number> = {
+  8: 0.78,
+  9: 0.76,
+  10: 0.75,
+  11: 0.72,
+  12: 0.7,
+};
+
+export const TEN_RM_OF_1RM = 0.75;
+
+export function estimated1rm(weight: number, reps: number): number | null {
+  const percent = REPS_TO_1RM_PERCENT[reps];
+  if (!percent || weight <= 0) return null;
+  return Math.floor(weight / percent);
+}
+
+export function percentOf1rm(intensity: Intensity, setFraction = 1): number {
+  return TEN_RM_OF_1RM * INTENSITY_PERCENT[intensity] * setFraction;
+}
+
+export function formatPercent(value: number): string {
+  const pct = value * 100;
+  const rounded = Math.round(pct * 10) / 10;
+  return `${rounded}%`;
+}
+
+export function setScaleLabel(
+  kind: "warmup" | "work",
+  index: number,
+  intensity: Intensity,
+): string {
+  if (kind === "warmup") {
+    const fraction = index === 1 ? 0.25 : 0.5;
+    return `${Math.round(fraction * 100)}% of today's work · ${formatPercent(percentOf1rm(intensity, fraction))} 1RM`;
+  }
+  return `${Math.round(INTENSITY_PERCENT[intensity] * 100)}% of 10RM · ${formatPercent(percentOf1rm(intensity))} 1RM`;
 }
 
 export function bestWorkSet1rm(session: Session, exerciseId: ExerciseId): number | null {
@@ -207,7 +251,7 @@ export function bestWorkSet1rm(session: Session, exerciseId: ExerciseId): number
   let best: number | null = null;
   for (const set of exercise.sets) {
     if (set.kind !== "work" || !set.done || set.actualReps == null) continue;
-    const estimate = brzycki1rm(set.actualWeight, set.actualReps);
+    const estimate = estimated1rm(set.actualWeight, set.actualReps);
     if (estimate != null && (best == null || estimate > best)) best = estimate;
   }
   return best;

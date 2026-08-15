@@ -1,8 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { formatPointer, intensityPercent, sessionTitle, workoutHref } from "@/lib/format";
-import { EXERCISE_IDS, WEEK_REPS, exerciseName, workWeight } from "@/lib/program";
+import { formatPointer, sessionTitle, workoutHref } from "@/lib/format";
+import {
+  EXERCISE_IDS,
+  INTENSITY_PERCENT,
+  REPS_TO_1RM_PERCENT,
+  WEEK_REPS,
+  exerciseName,
+  formatPercent,
+  percentOf1rm,
+  workWeight,
+} from "@/lib/program";
 import { baselinesFor, findSession } from "@/lib/storage";
 import { useWorkoutStore } from "@/lib/store";
 
@@ -23,15 +32,14 @@ export function TodayView() {
         <p className="text-sm text-neutral-600">All-Pro</p>
         <h1 className="text-2xl font-semibold">{formatPointer(store.pointer)}</h1>
         <p>
-          {sessionTitle(store.pointer)} · {intensityPercent(store.pointer.intensity)} of your
-          heavy baseline
+          {sessionTitle(store.pointer)} · {Math.round(INTENSITY_PERCENT[store.pointer.intensity] * 100)}% of
+          10RM ({formatPercent(percentOf1rm(store.pointer.intensity))} of 1RM)
         </p>
-        {store.pointer.cycle === 1 && store.pointer.week === 1 ? (
-          <p className="text-sm text-neutral-700">
-            New 5-week block, not a continuation of old spreadsheet Cycle 2. Heavy / medium /
-            light are the three days this week.
-          </p>
-        ) : null}
+        <p className="text-sm text-neutral-700">
+          Heavy 10RM sits at 75% of 1RM. Warm-ups are 25% then 50% of today&apos;s work weight.
+          Week {store.pointer.week} is {reps} reps ({Math.round(REPS_TO_1RM_PERCENT[reps] * 100)}%
+          1RM if that set were a max).
+        </p>
       </header>
 
       <Link

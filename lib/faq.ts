@@ -14,6 +14,55 @@ export const PROGRAM_SUMMARY = [
   "Do not add extra lifts until you have finished at least three cycles. Cardio and abs belong on rest days, and keep them modest.",
 ];
 
+export const SCALING = {
+  title: "The formula",
+  intro:
+    "The heavy working weight is a 10-rep max — about 75% of a one-rep max. Medium, light, and warm-ups are percentages of that. Same formulas as the old spreadsheet, rounded to 5 lb.",
+  setRows: [
+    {
+      name: "Warm-up 1",
+      ofTenRm: "25% of that day's work",
+      ofOneRm: "19% of 1RM on heavy day",
+      formula: "FLOOR(work × 0.25, 5)",
+    },
+    {
+      name: "Warm-up 2",
+      ofTenRm: "50% of that day's work",
+      ofOneRm: "38% of 1RM on heavy day",
+      formula: "FLOOR(work × 0.50, 5)",
+    },
+    {
+      name: "Heavy work",
+      ofTenRm: "100% of 10RM",
+      ofOneRm: "75% of 1RM",
+      formula: "the cycle working weight",
+    },
+    {
+      name: "Medium work",
+      ofTenRm: "90% of 10RM",
+      ofOneRm: "67.5% of 1RM",
+      formula: "MROUND(10RM × 0.90, 5)",
+    },
+    {
+      name: "Light work",
+      ofTenRm: "80% of 10RM",
+      ofOneRm: "60% of 1RM",
+      formula: "MROUND(10RM × 0.80, 5)",
+    },
+  ],
+  weekRows: [
+    { week: 1, reps: 8, ofOneRm: "78%", note: "Easy. 10RM for 8 reps." },
+    { week: 2, reps: 9, ofOneRm: "76%", note: "Still in reserve." },
+    { week: 3, reps: 10, ofOneRm: "75%", note: "True 10RM week." },
+    { week: 4, reps: 11, ofOneRm: "72%", note: "Getting hard." },
+    { week: 5, reps: 12, ofOneRm: "70%", note: "Test. 12/12 → next 10RM is × 1.10." },
+  ],
+  nextCycle:
+    "Next cycle 10RM = MROUND(current 10RM × 1.10, 5) only if both heavy work sets hit 12 on week 5. Miss a rep and that lift repeats the same 10RM.",
+  estimatedMax: "Estimated 1RM = ROUNDDOWN(work weight ÷ week %1RM, 0). Week 1 uses 0.78, week 3 uses 0.75, week 5 uses 0.70.",
+  example: "If this cycle's 10RM is 95 lb: Heavy 95, Medium 85, Light 75. Heavy warm-ups FLOOR to 20 and 45. Estimated 1RM on week 1 is ROUNDDOWN(95 / 0.78) = 121.",
+};
+
 export const CYCLE_EXPLAINER = {
   title: "Cycle 1 vs Cycle 2",
   body: [
@@ -28,6 +77,12 @@ export const CYCLE_EXPLAINER = {
 };
 
 export const FAQ: FaqItem[] = [
+  {
+    id: "formula",
+    question: "What % of max am I supposed to lift?",
+    answer:
+      "Heavy working weight is a 10-rep max (~75% of 1RM). Medium is 90% of that (~67.5% 1RM). Light is 80% (~60% 1RM). Warm-ups are FLOOR(25%) and FLOOR(50%) of that day's work weight. Weeks only add a rep: 8, 9, 10, 11, 12. Estimated 1RM is ROUNDDOWN(work ÷ 0.78/0.76/0.75/0.72/0.70). Next cycle is × 1.10 if week 5 heavy is 12/12.",
+  },
   {
     id: "cycle-vs-cycle",
     question: "What's the difference between Cycle 1 and Cycle 2?",
