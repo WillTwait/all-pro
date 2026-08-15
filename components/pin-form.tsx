@@ -34,12 +34,12 @@ export function PinForm() {
       <label className="flex flex-col gap-1">
         <span className="font-medium">Code</span>
         <input
-          type="password"
+          type="text"
           inputMode="numeric"
           pattern="[0-9]*"
-          autoComplete="off"
+          autoComplete="one-time-code"
           required
-          className="h-12 rounded-lg border border-neutral-400 bg-white px-3 tracking-[0.3em]"
+          className="h-12 rounded-lg border border-neutral-400 bg-white px-3 text-center text-2xl tracking-[0.4em]"
           value={pin}
           onChange={(event) => setPin(event.target.value.replace(/\D/g, ""))}
         />

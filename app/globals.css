@@ -26,6 +26,8 @@ select,
 textarea,
 button {
   font: inherit;
+  font-size: 16px;
+  touch-action: manipulation;
 }
 
 textarea {

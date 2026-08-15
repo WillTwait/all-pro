@@ -14,7 +14,7 @@ export function NumberStepper({ value, step = 1, min = 0, max = 9999, onChange, 
     <span className="inline-flex items-center gap-1">
       <button
         type="button"
-        className="h-10 w-10 rounded-lg border border-neutral-400 text-lg"
+        className="h-11 w-11 rounded-lg border border-neutral-400 text-xl"
         aria-label="Decrease"
         onClick={() => onChange(Math.max(min, value - step))}
       >
@@ -23,7 +23,7 @@ export function NumberStepper({ value, step = 1, min = 0, max = 9999, onChange, 
       <input
         type="number"
         inputMode="numeric"
-        className="h-10 w-16 rounded-lg border border-neutral-400 bg-white text-center"
+        className="h-11 w-[4.5rem] rounded-lg border border-neutral-400 bg-white text-center"
         value={Number.isFinite(value) ? value : 0}
         min={min}
         max={max}
@@ -36,7 +36,7 @@ export function NumberStepper({ value, step = 1, min = 0, max = 9999, onChange, 
       {suffix ? <span className="w-8 text-sm text-neutral-600">{suffix}</span> : null}
       <button
         type="button"
-        className="h-10 w-10 rounded-lg border border-neutral-400 text-lg"
+        className="h-11 w-11 rounded-lg border border-neutral-400 text-xl"
         aria-label="Increase"
         onClick={() => onChange(Math.min(max, value + step))}
       >

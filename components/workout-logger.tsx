@@ -111,10 +111,10 @@ export function WorkoutLogger() {
                         {setScaleLabel(set.kind, set.index, session.intensity)}
                       </span>
                     </span>
-                    <label className="flex h-10 items-center gap-2">
+                    <label className="flex min-h-11 items-center gap-2 pl-2">
                       <input
                         type="checkbox"
-                        className="h-5 w-5"
+                        className="h-6 w-6"
                         checked={set.done}
                         onChange={(event) => {
                           const exercises = session.exercises.map((item, index) => {

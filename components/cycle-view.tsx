@@ -158,7 +158,12 @@ export function CycleView() {
           : "."}
       </p>
 
-      <FormulaTables />
+      <details className="border-t border-neutral-300 pt-3">
+        <summary className="cursor-pointer py-2 font-medium">The formula</summary>
+        <div className="pt-2">
+          <FormulaTables />
+        </div>
+      </details>
     </div>
   );
 }

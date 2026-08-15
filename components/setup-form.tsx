@@ -9,7 +9,6 @@ import {
   PRESETS,
 } from "@/lib/program";
 import { CYCLE_EXPLAINER } from "@/lib/faq";
-import { FormulaTables } from "./formula-tables";
 import { useWorkoutStore } from "@/lib/store";
 import { EXERCISE_IDS, type Accessory, type Baselines, type ExerciseId, type WeightPreset } from "@/lib/types";
 import { NumberStepper } from "./number-stepper";
@@ -55,8 +54,6 @@ export function SetupForm() {
         </p>
       </header>
 
-      <FormulaTables />
-
       <section className="flex flex-col gap-2">
         <h2 className="font-medium">{CYCLE_EXPLAINER.title}</h2>
         {CYCLE_EXPLAINER.body.map((paragraph) => (
@@ -94,11 +91,11 @@ export function SetupForm() {
       <fieldset className="flex flex-col gap-2">
         <legend className="font-medium">Starting point</legend>
         {(Object.keys(PRESETS) as WeightPreset[]).map((key) => (
-          <label key={key} className="flex items-start gap-2">
+          <label key={key} className="flex items-start gap-3 py-1">
             <input
               type="radio"
               name="preset"
-              className="mt-1"
+              className="mt-1 h-5 w-5"
               checked={preset === key}
               onChange={() => applyPreset(key)}
             />
