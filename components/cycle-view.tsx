@@ -148,7 +148,15 @@ export function CycleView() {
         className="flex h-12 items-center justify-center rounded-lg bg-black text-white"
         onClick={() => startSession(pointer)}
       >
-        Log this session
+        {store.sessions.some(
+          (session) =>
+            session.cycle === pointer.cycle &&
+            session.week === pointer.week &&
+            session.intensity === pointer.intensity &&
+            session.completedAt,
+        )
+          ? "Review this session"
+          : "Log this session"}
       </Link>
 
       <p className="text-sm text-neutral-600">

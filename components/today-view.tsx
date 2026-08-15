@@ -5,11 +5,8 @@ import { formatPointer, sessionTitle, workoutHref } from "@/lib/format";
 import {
   EXERCISE_IDS,
   INTENSITY_PERCENT,
-  REPS_TO_1RM_PERCENT,
   WEEK_REPS,
   exerciseName,
-  formatPercent,
-  percentOf1rm,
   workWeight,
 } from "@/lib/program";
 import { baselinesFor, findSession } from "@/lib/storage";
@@ -33,12 +30,7 @@ export function TodayView() {
         <h1 className="text-2xl font-semibold">{formatPointer(store.pointer)}</h1>
         <p>
           {sessionTitle(store.pointer)} · {Math.round(INTENSITY_PERCENT[store.pointer.intensity] * 100)}% of
-          10RM ({formatPercent(percentOf1rm(store.pointer.intensity))} of 1RM)
-        </p>
-        <p className="text-sm text-neutral-700">
-          Heavy 10RM sits at 75% of 1RM. Warm-ups are 25% then 50% of today&apos;s work weight.
-          Week {store.pointer.week} is {reps} reps ({Math.round(REPS_TO_1RM_PERCENT[reps] * 100)}%
-          1RM if that set were a max).
+          10RM
         </p>
       </header>
 
@@ -67,8 +59,8 @@ export function TodayView() {
       </section>
 
       <p className="text-sm text-neutral-700">
-        {finishedThisCycle} of 15 sessions logged this cycle. Warm-ups are 1/4 and 1/2 of the
-        work weight. Use Cycle if you need to jump around.
+        {finishedThisCycle} of 15 sessions this cycle. Rest ~1:00 on warm-ups, ~1:30 on work
+        sets.
       </p>
     </div>
   );

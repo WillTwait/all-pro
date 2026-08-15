@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useRef } from "react";
-import { formatDate, formatPointer } from "@/lib/format";
+import { formatDate, formatPointer, workoutHref } from "@/lib/format";
 import {
   EXERCISE_IDS,
   bestWorkSet1rm,
@@ -67,19 +68,21 @@ export function LogView() {
           <ul className="flex flex-col gap-3">
             {completed.map((session) => (
               <li key={session.id} className="border-t border-neutral-200 pt-3">
-                <p className="font-medium">
-                  {formatDate(session.date)} · {formatPointer(session)}
-                </p>
-                <p className="text-sm text-neutral-700">
-                  Volume {sessionVolume(session).toLocaleString()} lb
-                  {EXERCISE_IDS.slice(0, 3).map((id) => {
-                    const estimate = bestWorkSet1rm(session, id);
-                    return estimate
-                      ? ` · ${exerciseName(id, store.accessory)} 1RM ~${estimate}`
-                      : "";
-                  })}
-                </p>
-                {session.notes ? <p className="text-sm">{session.notes}</p> : null}
+                <Link href={workoutHref(session)} className="block min-h-11">
+                  <p className="font-medium">
+                    {formatDate(session.date)} · {formatPointer(session)}
+                  </p>
+                  <p className="text-sm text-neutral-700">
+                    Volume {sessionVolume(session).toLocaleString()} lb
+                    {EXERCISE_IDS.slice(0, 3).map((id) => {
+                      const estimate = bestWorkSet1rm(session, id);
+                      return estimate
+                        ? ` · ${exerciseName(id, store.accessory)} 1RM ~${estimate}`
+                        : "";
+                    })}
+                  </p>
+                  {session.notes ? <p className="text-sm">{session.notes}</p> : null}
+                </Link>
               </li>
             ))}
           </ul>
