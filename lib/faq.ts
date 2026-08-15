@@ -14,7 +14,26 @@ export const PROGRAM_SUMMARY = [
   "Do not add extra lifts until you have finished at least three cycles. Cardio and abs belong on rest days, and keep them modest.",
 ];
 
+export const CYCLE_EXPLAINER = {
+  title: "Cycle 1 vs Cycle 2",
+  body: [
+    "A cycle is one five-week block of the same workout. The lifts do not change. Heavy, medium, and light are the three days in a week (100%, 90%, 80%) — not different cycles.",
+    "On the old spreadsheet, Cycle 1 and Cycle 2 were the same program. Cycle 2 was just ~10% more on the bar after you passed week 5 with 12 reps.",
+    "You are not still on Cycle 2. After time off you start a brand-new Cycle 1 here: week 1, 8 reps. The only choice is which heavy weights to put on that new block.",
+  ],
+  oldLoads: [
+    { label: "Old Cycle 1", note: "where you started then", squat: 95, bench: 95, row: 65, ohp: 55 },
+    { label: "Old Cycle 2", note: "where you left off", squat: 105, bench: 105, row: 70, ohp: 60 },
+  ],
+};
+
 export const FAQ: FaqItem[] = [
+  {
+    id: "cycle-vs-cycle",
+    question: "What's the difference between Cycle 1 and Cycle 2?",
+    answer:
+      "Nothing in the workout itself. Cycle 2 is the next 5-week block with more weight after you hit 12/12 on week 5 heavy. Your old sheet: Cycle 1 squat/bench 95, Cycle 2 squat/bench 105. After a long layoff you start a new Cycle 1. Default weights here are old Cycle 1 (~90% of that last peak), not old Cycle 2.",
+  },
   {
     id: "sets",
     question: "How many sets am I doing?",
@@ -25,7 +44,7 @@ export const FAQ: FaqItem[] = [
     id: "starting-weight",
     question: "What should I start with after time off?",
     answer:
-      "Your old Cycle 2 peak was squat 105, bench 105, row 70, press 60, SLDL 85, accessory 40, calves 75. Medium (the default) is old Cycle 1: 95 / 95 / 65 / 55 / 85 / 40 / 70 — about 90% of that peak. Conservative uses the restart-sheet test loads. You can edit any lift on Setup. Do not jump back to Cycle 2 numbers just because they used to move.",
+      "Start a new Cycle 1. Default to old Cycle 1 loads (squat/bench 95). Old Cycle 2 (105) is where you finished years ago, not where you resume. Conservative (squat 65) is there if even 95 feels like too much. You can edit any lift on Setup.",
   },
   {
     id: "too-easy",

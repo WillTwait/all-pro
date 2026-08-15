@@ -36,17 +36,17 @@ export const WEEK_REPS: Record<Week, number> = {
 };
 
 export const PRESET_LABEL: Record<WeightPreset, string> = {
-  conservative: "Conservative restart",
-  medium: "Medium — old Cycle 1",
-  peak: "Last peak — old Cycle 2",
+  conservative: "Light restart (squat 65)",
+  medium: "Old Cycle 1 weights (squat 95)",
+  peak: "Old Cycle 2 weights (squat 105)",
 };
 
 export const PRESET_BLURB: Record<WeightPreset, string> = {
   conservative:
-    "From the 4-week restart sheet. Safer if it has been years and you want to relearn the movements.",
+    "From the restart sheet. Use this if the bar feels rusty and you want to relearn the movements first.",
   medium:
-    "Your original Cycle 1 working weights — about 90% of where Cycle 2 topped out. A reasonable restart if the lifts still feel familiar.",
-  peak: "Where the old spreadsheet left off. Use this only if those loads still move with clean form.",
+    "What you used when you first ran the program. About 90% of where you left off. The right default after time off.",
+  peak: "Where the old spreadsheet ended. Same workout, ~10% heavier. Skip this until a new cycle actually earns it.",
 };
 
 /** Heavy-day working loads from the original All-Pro spreadsheet. */

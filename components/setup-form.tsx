@@ -8,6 +8,7 @@ import {
   PRESET_LABEL,
   PRESETS,
 } from "@/lib/program";
+import { CYCLE_EXPLAINER } from "@/lib/faq";
 import { useWorkoutStore } from "@/lib/store";
 import { EXERCISE_IDS, type Accessory, type Baselines, type ExerciseId, type WeightPreset } from "@/lib/types";
 import { NumberStepper } from "./number-stepper";
@@ -48,10 +49,44 @@ export function SetupForm() {
         <p className="text-sm text-neutral-600">All-Pro</p>
         <h1 className="text-2xl font-semibold">Starting weights</h1>
         <p>
-          Three days a week, four sets each lift: two warm-ups and two work sets. Pick a
-          starting heavy load. Medium and light days are 90% and 80% of that.
+          Three days a week, four sets each lift: two warm-ups and two work sets. You are
+          starting a new 5-week Cycle 1. Pick how heavy that block should be.
         </p>
       </header>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="font-medium">{CYCLE_EXPLAINER.title}</h2>
+        {CYCLE_EXPLAINER.body.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
+        <div className="overflow-x-auto text-sm">
+          <table className="w-full border-collapse text-left">
+            <thead>
+              <tr>
+                <th className="border-b border-neutral-300 py-1 pr-2 font-medium"> </th>
+                <th className="border-b border-neutral-300 py-1 pr-2 font-medium">Squat</th>
+                <th className="border-b border-neutral-300 py-1 pr-2 font-medium">Bench</th>
+                <th className="border-b border-neutral-300 py-1 pr-2 font-medium">Row</th>
+                <th className="border-b border-neutral-300 py-1 font-medium">Press</th>
+              </tr>
+            </thead>
+            <tbody>
+              {CYCLE_EXPLAINER.oldLoads.map((row) => (
+                <tr key={row.label}>
+                  <td className="py-1 pr-2">
+                    {row.label}
+                    <span className="block text-neutral-600">{row.note}</span>
+                  </td>
+                  <td className="py-1 pr-2">{row.squat}</td>
+                  <td className="py-1 pr-2">{row.bench}</td>
+                  <td className="py-1 pr-2">{row.row}</td>
+                  <td className="py-1">{row.ohp}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <fieldset className="flex flex-col gap-2">
         <legend className="font-medium">Starting point</legend>
@@ -103,8 +138,12 @@ export function SetupForm() {
       </div>
 
       <button type="submit" className="h-12 rounded-lg bg-black text-white">
-        Start Cycle 1
+        Start a new Cycle 1
       </button>
+      <p className="text-sm text-neutral-600">
+        This always begins week 1 / 8 reps / heavy day. Old Cycle 1 vs Cycle 2 only changes
+        the weights above, not which week you are on.
+      </p>
     </form>
   );
 }

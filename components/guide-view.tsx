@@ -1,4 +1,4 @@
-import { FAQ, PROGRAM_SUMMARY } from "@/lib/faq";
+import { CYCLE_EXPLAINER, FAQ, PROGRAM_SUMMARY } from "@/lib/faq";
 import { FORM_GUIDES } from "@/lib/form";
 
 export function GuideView() {
@@ -8,6 +8,21 @@ export function GuideView() {
         <h1 className="text-2xl font-semibold">Guide</h1>
         <p>All-Pro Simple Beginner, the same structure as your old spreadsheet.</p>
       </header>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-lg font-semibold">{CYCLE_EXPLAINER.title}</h2>
+        {CYCLE_EXPLAINER.body.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
+        <ul className="list-disc pl-5">
+          {CYCLE_EXPLAINER.oldLoads.map((row) => (
+            <li key={row.label}>
+              {row.label} ({row.note}): squat {row.squat}, bench {row.bench}, row {row.row},
+              press {row.ohp}
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <section className="flex flex-col gap-2">
         <h2 className="text-lg font-semibold">How it works</h2>

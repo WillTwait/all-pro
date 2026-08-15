@@ -26,6 +26,12 @@ export function TodayView() {
           {sessionTitle(store.pointer)} · {intensityPercent(store.pointer.intensity)} of your
           heavy baseline
         </p>
+        {store.pointer.cycle === 1 && store.pointer.week === 1 ? (
+          <p className="text-sm text-neutral-700">
+            New 5-week block, not a continuation of old spreadsheet Cycle 2. Heavy / medium /
+            light are the three days this week.
+          </p>
+        ) : null}
       </header>
 
       <Link
