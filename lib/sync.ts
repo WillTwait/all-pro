@@ -29,31 +29,31 @@ export function pickCloudStore(
   return { store: remote, pushLocal: false };
 }
 
-export async function pullCloudStore(userId: string, local: Store): Promise<Store> {
+export async function pullCloudStore(local: Store): Promise<Store> {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("profiles")
+    .from("app_state")
     .select("store, updated_at")
-    .eq("id", userId)
+    .eq("id", 1)
     .maybeSingle();
 
   if (error) throw error;
 
   if (!data?.store || Object.keys(data.store as object).length === 0) {
-    await pushCloudStore(userId, local);
+    await pushCloudStore(local);
     return local;
   }
 
   const remote = migrateStore(data.store as Store);
   const picked = pickCloudStore(local, remote, data.updated_at);
-  if (picked.pushLocal) await pushCloudStore(userId, picked.store);
+  if (picked.pushLocal) await pushCloudStore(picked.store);
   return picked.store;
 }
 
-export async function pushCloudStore(userId: string, store: Store): Promise<void> {
+export async function pushCloudStore(store: Store): Promise<void> {
   const supabase = createClient();
-  const { error } = await supabase.from("profiles").upsert({
-    id: userId,
+  const { error } = await supabase.from("app_state").upsert({
+    id: 1,
     store: store as unknown as Json,
   });
   if (error) throw error;

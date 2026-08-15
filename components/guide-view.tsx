@@ -77,8 +77,8 @@ export function GuideView() {
         <h2 className="text-lg font-semibold text-black">On your phone</h2>
         <p className="mt-2">
           In Safari, tap Share → Add to Home Screen. It opens full-screen and keeps a local
-          copy after the first load, then syncs when you are back online. Sign in so a new
-          phone can pick up the same log.
+          copy after the first load, then syncs when you are back online. Unlock with the
+          code on a new phone to pick up the same log.
         </p>
       </section>
 

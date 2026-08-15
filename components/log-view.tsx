@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { formatDate, formatPointer } from "@/lib/format";
 import {
   EXERCISE_IDS,
@@ -11,19 +11,18 @@ import {
 } from "@/lib/program";
 import { baselinesFor } from "@/lib/storage";
 import { useWorkoutStore } from "@/lib/store";
-import { createClient } from "@/lib/supabase/client";
 
 export function LogView() {
   const {
     store,
-    user,
+    unlocked,
     syncStatus,
     syncError,
     exportJson,
     importJson,
     resetAll,
     resetCurrentSession,
-    signOut,
+    lock,
   } = useWorkoutStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const completed = [...store.sessions]
@@ -41,9 +40,8 @@ export function LogView() {
       <header>
         <h1 className="text-2xl font-semibold">Log</h1>
         <p>
-          {user
-            ? "Workouts sync to your account. This phone also keeps a local copy for the gym."
-            : "Logs are on this phone until you sign in. Export a backup if you care."}
+          Workouts sync to the cloud after you unlock. This phone also keeps a local copy for
+          the gym.
         </p>
       </header>
 
@@ -89,34 +87,29 @@ export function LogView() {
       </section>
 
       <section className="flex flex-col gap-2">
-        <h2 className="font-medium">Account</h2>
-        {user ? (
-          <>
-            <p className="text-sm text-neutral-700">{user.email}</p>
-            <p className="text-sm text-neutral-700">
-              {syncStatus === "saving"
-                ? "Saving…"
-                : syncStatus === "cloud"
-                  ? "Synced"
-                  : syncStatus === "offline"
-                    ? "Offline. Using the copy on this phone."
-                    : syncStatus === "error"
-                      ? (syncError ?? "Sync failed.")
-                      : "On this phone only."}
-            </p>
-            <button
-              type="button"
-              className="h-11 rounded-lg border border-neutral-400"
-              onClick={() => {
-                void signOut();
-              }}
-            >
-              Sign out
-            </button>
-          </>
-        ) : (
-          <SignInLater />
-        )}
+        <h2 className="font-medium">Lock</h2>
+        <p className="text-sm text-neutral-700">
+          {syncStatus === "saving"
+            ? "Saving…"
+            : syncStatus === "cloud"
+              ? "Synced"
+              : syncStatus === "offline"
+                ? "Offline. Using the copy on this phone."
+                : syncStatus === "error"
+                  ? (syncError ?? "Sync failed.")
+                  : "On this phone only."}
+        </p>
+        {unlocked ? (
+          <button
+            type="button"
+            className="h-11 rounded-lg border border-neutral-400"
+            onClick={() => {
+              void lock();
+            }}
+          >
+            Lock this phone
+          </button>
+        ) : null}
       </section>
 
       <section className="flex flex-col gap-2">
@@ -183,72 +176,5 @@ export function LogView() {
         </button>
       </section>
     </div>
-  );
-}
-
-function SignInLater() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [message, setMessage] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  async function submit(event: React.FormEvent) {
-    event.preventDefault();
-    setBusy(true);
-    setMessage(null);
-    const supabase = createClient();
-    try {
-      if (mode === "signup") {
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) throw error;
-        if (!data.session) setMessage("Check your email to confirm the account, then sign in.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      }
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Could not sign in.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return (
-    <form className="flex flex-col gap-2" onSubmit={submit}>
-      <p className="text-sm text-neutral-700">
-        Sign in to keep this log on your account across phones.
-      </p>
-      <input
-        type="email"
-        required
-        autoComplete="email"
-        placeholder="Email"
-        className="h-11 rounded-lg border border-neutral-400 bg-white px-3"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-      />
-      <input
-        type="password"
-        required
-        minLength={6}
-        autoComplete={mode === "signup" ? "new-password" : "current-password"}
-        placeholder="Password"
-        className="h-11 rounded-lg border border-neutral-400 bg-white px-3"
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-      />
-      {message ? <p className="text-sm">{message}</p> : null}
-      <button type="submit" disabled={busy} className="h-11 rounded-lg bg-black text-white">
-        {busy ? "Working…" : mode === "signin" ? "Sign in" : "Create account"}
-      </button>
-      <button
-        type="button"
-        className="h-11 text-sm text-neutral-700"
-        onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-      >
-        {mode === "signin" ? "Need an account?" : "Already have an account?"}
-      </button>
-    </form>
   );
 }

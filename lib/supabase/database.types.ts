@@ -12,6 +12,24 @@ export type Database = {
   };
   public: {
     Tables: {
+      app_state: {
+        Row: {
+          id: number;
+          store: Json;
+          updated_at: string;
+        };
+        Insert: {
+          id?: number;
+          store?: Json;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          store?: Json;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
           id: string;
